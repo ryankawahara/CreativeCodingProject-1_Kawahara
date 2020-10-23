@@ -1,35 +1,77 @@
 let redOrWhite;
-let choose = 1;
+
 let leftClicker = false;
 let rightClicker = false;
-let speed;
+let maximumStars=10;
+let maximumSquares=5;
 let ylocStart=750;
-
-
 let box1;
 let box2;
+let numberOfStars=1;
+let numberOfSquares=1;
 let move=200;
 allMove=200;
-let star1;
+let stars=[maximumStars];
+let squares=[maximumSquares]
+let clock;
+let totalStars=0;
+let totalSquares=0;
 
 function setup() {
 
-  speed = 1;
+  
   createCanvas(720, 720);
   background(116, 185, 255);
   ellipseMode(CENTER);
   rectMode(CENTER);
  smooth();
- 
- box1 = new Box(1);
- box2 = new Box(2);
- star1 = new Star(415,height);
+ box1 = new Box(1); //left booth
+ box2 = new Box(2); //right booth
+ clock = new Clock(2750); //clock for blue circles
+ clock2 = new Clock(2750); //clock for red squares
+
+
+     
+
+// stars[0] = new Bouncer(415,height+250);
+//  stars[1] = new Bouncer(415,height+250);
+ for (let i = 0; i<maximumStars;i++){
+
+    stars[i] = new Bouncer(415,height+250);
+  } 
+  
+  for (let i = 0; i < maximumSquares;i++){
+
+    squares[i]= new Bouncer(470,height);
+  }
+
+
+
+clock.start(); //start timer
+clock2.start();
 }
 
 
 function draw() {
- 
+  // star creation is adapted from 
+  //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
+ print(totalSquares);
   background(116, 185, 255);
+  if (clock.isFinished()){
+    if ((totalStars < stars.length)&&(leftClicker==true)){
+      stars[totalStars]= new Bouncer(415,height+250);
+      totalStars+=1;
+    }
+    clock.start();
+  }
+
+    if (clock2.isFinished()){
+    if ((totalSquares < squares.length)&&(rightClicker==true)){
+      squares[totalSquares]= new Bouncer(470,height);
+      totalSquares+=1;
+    }
+    clock2.start();
+  }
   
 //  push();
  // translate(100, 100);
@@ -39,22 +81,37 @@ function draw() {
   
   
 //  pop();
-  star1.move();
-    star1.display();
+ // star.move();
+ //   star.display();
     
 
-  rectangle();
-      choose+=1;
+  //rectangle();
+     
     //  println(choose);
+    for (let i=0;i<totalStars;i++){
+       stars[i].display();
+       stars[i].launcher();
+     
+     }
+     for (let j=0;j<totalSquares;j++){
+        squares[j].displaySquare();
+       squares[j].squareLauncher();
+     }
 
+      
     push();
     translate(allMove,0)
     translate(70,650);
+
+     
+  
+    
     box1.launch();
    // box1.light();
    // box1.speed();
     box1.distanceX=dist(mouseX,0,70+allMove,0);
     box1.distanceY=dist(0,725,0,mouseY,);
+
    // print(dist(70,725,0,box1.yLoc));
 
   
@@ -89,48 +146,6 @@ function draw() {
 
 
 
-function rectangle(){
-  noStroke();
-  //fill(255,0,0);
-   if (choose%8==0){
-     // println("white");
-      redOrWhite=color(255);
-    //  println("yep");
-    
-    }
-    else{
-    //  println("red");
-        redOrWhite=color(255,0,0);
-       // println("nope");
-        
-    }
-    fill(redOrWhite);
-  rect(250,250,115,75);
-  
-
-//  fill(0,255,0);
-
-  for(let i=220; i<290;i+=10){
-        if (choose%8==0){
-     // println("white");
-      redOrWhite=color(255,0,0);
-    
-    }
-    else{
-    //  println("red");
-        redOrWhite=color(255);
-        
-    }
-    
-  //  fill(0,255,0);
-  fill(redOrWhite);
-      rect(250,i,115,5);
-
-    
-  }
-  
-  
-}
 
 
 
@@ -173,6 +188,8 @@ box1.yloc=ylocStart;
   leftClicker = !leftClicker
   box1.opacity=0;
   box1.fadeOutOpacity=100;
+  box1.scale=1;
+  box1.boxOpening=0;
 
 }
 if ((box2.bounds()==true)){
@@ -181,6 +198,8 @@ if ((box2.bounds()==true)){
   rightClicker = !rightClicker
   box2.opacity=0;
   box2.fadeOutOpacity=100;
+  box2.scale=1;
+  box2.boxOpening=0;
 }
 
   
@@ -196,11 +215,21 @@ class Box {
     this.opacity=0;
     this.fadeOutOpacity=0;
     this.scale=1;
+    this.boxOpening=0;
+    this.letterSpeed=1;
   }
 speed(){
   fill(0);
 if ((leftClicker == true)&&(this.side==1)){
-      
+    if (totalStars==maximumStars){
+      this.yloc=1000;
+      this.letterSpeed=0;
+      this.scale=1;
+
+    }
+    else{
+
+
         // rect(0,this.yloc-650,25,25);
         push();
         scale(this.scale);
@@ -209,17 +238,27 @@ if ((leftClicker == true)&&(this.side==1)){
         this.envelope(1);
         pop();
      //   println("hello");
-       this.yloc-=speed;
+       this.yloc-=this.letterSpeed;
        this.scale-=0.0025;
+       noStroke();
+       fill(0,this.boxOpening);
+       rect(0,-25,50,30);
+       this.boxOpening+=1.55;
+
+     }
 
       
     }
-    if (this.yloc<600){ //625
+    if (this.yloc<600){ //625 This resets for each ballot turned in
+  
       this.scale=1;
       
         this.yloc=ylocStart; //720
+         this.boxOpening=0;
 
     }
+
+
     /*
     if (box2.yloc<623){
 
@@ -230,6 +269,8 @@ if ((leftClicker == true)&&(this.side==1)){
 
   else if ((rightClicker==true)&&(this.side==2))
   {
+   
+    
     //rect(0,this.yloc-650,25,25);
      //   println("hello");
       push();
@@ -238,12 +279,27 @@ if ((leftClicker == true)&&(this.side==1)){
        // rect(0,0,25,25);
         this.envelope(2);
         pop();
-        this.yloc-=speed;
+        this.yloc-=this.letterSpeed;
          this.scale-=0.0025;
+           noStroke();
+       fill(0,this.boxOpening);
+       rect(0,-25,50,30);
+       this.boxOpening+=1.55;
+
+        if (totalSquares>=maximumSquares){
+       translate(0,this.yloc-650,25,25);
+
+    
+      this.letterSpeed=0;
+      this.scale=1;
+      this.yloc=-1000;
+
+    }
+     
 
 
   }
-  
+
 
 }
 
@@ -253,12 +309,13 @@ launch(){
   fill(255);
   rect(0,0,85,150); //white box
   fill(0);
-  rect(0,-25,50,30); //block box
+  rect(0,-25,50,30); //black box
     fill(255);
     ellipse(0,-55,20,20);
 
     this.light();
     this.speed();
+
 
 
   
@@ -450,13 +507,14 @@ fill(195,0,25);
 
 }
 
-class Star {
+class Bouncer {
 
   constructor(x,y){
 
 this.pos = createVector(x,y);
-this.vel = createVector(0,-5);
+this.vel = createVector(0,-3);
 this.randomDirection;
+this.redWhite=true;
 
 
 }
@@ -477,7 +535,7 @@ fill(40, 154, 218);
   stroke(255);
   fill(255);
   strokeWeight(2);
-  rotate(frameCount / 100.0);
+  rotate(frameCount / -100.0);
   beginShape();
   vertex(0, -50);
   vertex(14, -20);
@@ -495,13 +553,67 @@ fill(40, 154, 218);
 
 }
 
+displaySquare(){
+
+  if (frameCount%7==0){
+    this.redWhite=!this.redWhite
+
+  }
+  push();
+
+  translate(this.pos.x,this.pos.y);
+  scale(0.85);
+   rotate(frameCount / 100.0);
+
+   noStroke();
+  //fill(255,0,0);
+   if (this.redWhite==true){
+     // println("white");
+      redOrWhite=color(255);
+    //  println("yep");
+    
+    }
+    else{
+    //  println("red");
+        redOrWhite=color(255,0,0);
+       // println("nope");
+        
+    }
+    fill(redOrWhite);
+  rect(0,0,75,75);
+  
+
+//  fill(0,255,0);
+
+  for(let i=-30; i<40;i+=10){
+        if (this.redWhite==true){
+     // println("white");
+      redOrWhite=color(255,0,0);
+    
+    }
+    else{
+    //  println("red");
+        redOrWhite=color(255);
+        
+    }
+    
+  //  fill(0,255,0);
+  fill(redOrWhite);
+      rect(0,i,75,5);
+
+    
+  }
+  pop();
+ 
+}
+
 move(){
 
 
   
 this.pos.add(this.vel);
-  this.randomDirection=p5.Vector.random2D();
-  this.randomDirection.mult(0.5);
+  this.randomDirection=p5.Vector.random2D().setMag(1);
+ // this.randomDirection.mult(1.5);
 if ((this.pos.x > 1080)||(this.pos.x<0)){
   this.vel.x=this.vel.x*-1;
 this.vel.y+=this.randomDirection.y;
@@ -516,11 +628,109 @@ if ((this.pos.y>1080)||(this.pos.y<0)){
   print(this.pos.y);
  // print('hi');
 }
+
+
 }
+moveSquare(){
+
+
+  
+this.pos.add(this.vel);
+  this.randomDirection=p5.Vector.random2D().setMag(1);
+ // this.randomDirection.mult(1.5);
+if ((this.pos.x > 720)||(this.pos.x<0)){
+  this.vel.x=this.vel.x*-1;
+this.vel.y+=this.randomDirection.y;
+
+  
+}
+if ((this.pos.y>720)||(this.pos.y<0)){
+  this.vel.y=this.vel.y*-1;
+    this.vel.x+=this.randomDirection.x;
+
+
+  print(this.pos.y);
+ // print('hi');
+}
+
+
+}
+launcher(){
+  if (leftClicker == true){
+    
+push();
+
+
+      translate(-allMove,0)
+    translate(-70,-650);
+
+     this.move();
+    //this.display();
+      pop();
+
+}
+
+
+}
+
+squareLauncher(){
+  if (rightClicker == true){
+
+    
+push();
+
+
+    translate(-allMove,0)
+    fill(0);
+
+    translate(-70,-650);
+
+     this.moveSquare();
+    //this.display();
+      pop();
+
+}
+
+
+}
+
+
 
 //from Shiffman 1.2 video on Vectors
 
 
+
+}
+
+class Clock{ //adapted from Shiffman 
+//http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
+  constructor(tempTotalTime){
+  this.savedTime; //When clock is started
+  this.totalTime=tempTotalTime;
+  this.passedTime;
+  }
+
+  setClock(t){
+    this.totalTime=this.t;
+  }
+
+  //start the clock
+
+  start(){
+
+    this.savedTime=millis();
+  }
+
+  isFinished(){
+    //check how much time has passed
+    this.passedTime=millis()-this.savedTime;
+    if(this.passedTime > this.totalTime){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
 }
 
