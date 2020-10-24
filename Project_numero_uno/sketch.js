@@ -1,4 +1,6 @@
 let redOrWhite;
+let backgroundRed=116;
+let backgroundBlue=255;
 
 let leftClicker = false;
 let rightClicker = false;
@@ -23,7 +25,20 @@ function setup() {
   stars=[maximumStars];
   
   createCanvas(720, 720);
-  background(116, 185, 255);
+  background(99, 110, 114);
+  if (totalStars>totalSquares){
+    
+    backgroundBlue+=1;
+    backgroundRed-=50;
+    
+    
+  }
+  else if (totalSquares>totalStars){
+    backgroundBlue-=1;
+    backgroundRed+=1;
+    
+    
+  }
   ellipseMode(CENTER);
   rectMode(CENTER);
  smooth();
@@ -60,7 +75,28 @@ function draw() {
   // star creation is adapted from 
   //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
  //print(totalSquares);
-  background(116, 185, 255);
+  
+  if ((totalStars==0)&&(totalSquares==0)){
+    
+      background(99, 110, 114,80);
+
+  }
+
+   else if (totalStars>totalSquares){
+    
+     background(116, 185, 255,80);
+    
+    
+  }
+  else if (totalSquares>totalStars){
+      background(214, 48, 49,80);
+    
+    
+  }
+  else if (totalSquares==totalStars){
+    background(108, 92, 231,80);
+    
+  }
   if (clock.isFinished()){
     if ((totalStars < stars.length)&&(leftClicker==true)){
       stars[totalStars]= new Bouncer(270,height);
@@ -95,6 +131,27 @@ function draw() {
     for (let i=0;i<totalStars;i++){
        stars[i].display();
        stars[i].launcher();
+     
+
+      /* for (other of stars){
+        if ((stars[i]!==other)&&(stars[i].intersects(other)))
+        {
+         // print("boink");
+         ellipse(width/2,height/2,50);
+       //  // stars[i].vel.x=stars[i].vel.x*-1;
+        //  stars[i].vel.y+=p5.Vector.random2D().setMag(1);
+         // stars[i].vel.y+=stars[i].randomDirection.y;
+         // stars[i].vel.x=stars[i].vel.x*-1;
+          //other.vel.x=other.vel.x*-1;
+        //  stars[i].vel.y+= (stars[i].randomDirection.y)/10;
+
+
+        }
+        else{
+          print("no");
+        }
+       } */
+
      
      }
      for (let j=0;j<totalSquares;j++){
@@ -156,6 +213,7 @@ function mouseDragged(){
     squares[i].dragged(mouseX,mouseY);
   }
 }
+
 
 
 
@@ -231,6 +289,7 @@ class Box {
     this.boxOpening=0;
     this.letterSpeed=1;
   }
+
 speed(){
   fill(0);
 if ((leftClicker == true)&&(this.side==1)){
@@ -588,6 +647,14 @@ display(){
 
 }
 
+intersects(other){
+  let howFar;
+  howFar= dist(this.pos.x,this.pos.y,other.pos.x,other.pos.y);
+  return (howFar < 126 );
+
+
+}
+
 displaySquare(){
 
   if (frameCount%7==0){
@@ -745,10 +812,6 @@ push();
 
 
 }
-
-
-
-
 
 //from Shiffman 1.2 video on Vectors
 
