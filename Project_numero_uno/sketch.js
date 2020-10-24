@@ -19,7 +19,7 @@ let totalSquares=0;
 
 function setup() {
   maximumSquares=floor(random(10,60));
-  maximumStars=floor(random(1,6));
+  maximumStars=floor(random(10,60));
   stars=[maximumStars];
   
   createCanvas(720, 720);
@@ -39,7 +39,7 @@ function setup() {
 //  stars[1] = new Bouncer(415,height+250);
  for (let i = 0; i<maximumStars;i++){
 
-    stars[i] = new Bouncer(415,height+250);
+    stars[i] = new Bouncer(385,height);
   } 
   
   for (let i = 0; i < maximumSquares;i++){
@@ -55,15 +55,15 @@ clock2.start();
 
 
 function draw() {
-  print("total"+totalStars);
-  print("max"+maximumStars);
+//  print("total"+totalStars);
+//  print("max"+maximumStars);
   // star creation is adapted from 
   //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
- print(totalSquares);
+ //print(totalSquares);
   background(116, 185, 255);
   if (clock.isFinished()){
     if ((totalStars < stars.length)&&(leftClicker==true)){
-      stars[totalStars]= new Bouncer(415,height+250);
+      stars[totalStars]= new Bouncer(270,height);
       totalStars+=1;
     }
     clock.start();
@@ -146,6 +146,15 @@ function draw() {
     }
    */
   
+}
+
+function mouseDragged(){
+  for (let i = 0; i<totalStars;i++){
+    stars[i].dragged(mouseX,mouseY);
+  }
+    for (let i = 0; i<totalSquares;i++){
+    squares[i].dragged(mouseX,mouseY);
+  }
 }
 
 
@@ -546,8 +555,10 @@ display(){
  //https://stackoverflow.com/questions/53799599/how-to-draw-a-star-shape-in-processingjs
   push();
  // rotate(frameCount / 200.0);
-  scale(0.65);
+
   translate(this.pos.x,this.pos.y);
+    scale(0.65);
+  //print(this.pos.x,"+",this.pos.y);
    circle(0, 0, 125);
   stroke(255);
    if (this.blueWhite==true){
@@ -638,24 +649,24 @@ move(){
 this.pos.add(this.vel);
   this.randomDirection=p5.Vector.random2D().setMag(1);
  // this.randomDirection.mult(1.5);
-if ((this.pos.x > 1080)||(this.pos.x<0)){
+if ((this.pos.x > 720)||(this.pos.x<0)){
   this.vel.x=this.vel.x*-1;
 this.vel.y+=this.randomDirection.y;
 
   
 }
-if ((this.pos.y>1080)||(this.pos.y<0)){
+if ((this.pos.y>720)||(this.pos.y<0)){
   this.vel.y=this.vel.y*-1;
     this.vel.x+=this.randomDirection.x;
 
 
-  print(this.pos.y);
+ // print(this.pos.y);
  // print('hi');
 }
 
 
 }
-moveSquare(){
+/*moveSquare(){
 
 
   
@@ -673,12 +684,13 @@ if ((this.pos.y>720)||(this.pos.y<0)){
     this.vel.x+=this.randomDirection.x;
 
 
-  print(this.pos.y);
+  //print(this.pos.y);
  // print('hi');
 }
 
 
 }
+*/
 launcher(){
   if (leftClicker == true){
     
@@ -697,6 +709,22 @@ push();
 
 }
 
+dragged(px,py){
+  let distance = dist(px,py,this.pos.x,this.pos.y);
+  if (distance<63){
+    this.pos.x=px;
+    this.pos.y=py;
+  }
+
+
+
+
+}
+
+
+
+
+
 squareLauncher(){
   if (rightClicker == true){
 
@@ -709,7 +737,7 @@ push();
 
     translate(-70,-650);
 
-     this.moveSquare();
+     this.move();
     //this.display();
       pop();
 
@@ -717,6 +745,8 @@ push();
 
 
 }
+
+
 
 
 
