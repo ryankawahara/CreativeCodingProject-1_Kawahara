@@ -2,7 +2,7 @@ let redOrWhite;
 
 let leftClicker = false;
 let rightClicker = false;
-let maximumStars=10;
+let maximumStars;
 let maximumSquares=5;
 let ylocStart=750;
 let box1;
@@ -18,7 +18,9 @@ let totalStars=0;
 let totalSquares=0;
 
 function setup() {
-
+  maximumSquares=floor(random(10,60));
+  maximumStars=floor(random(1,6));
+  stars=[maximumStars];
   
   createCanvas(720, 720);
   background(116, 185, 255);
@@ -53,6 +55,8 @@ clock2.start();
 
 
 function draw() {
+  print("total"+totalStars);
+  print("max"+maximumStars);
   // star creation is adapted from 
   //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
  print(totalSquares);
@@ -515,12 +519,25 @@ this.pos = createVector(x,y);
 this.vel = createVector(0,-3);
 this.randomDirection;
 this.redWhite=true;
+    this.blueWhite=true;
 
 
 }
 
 display(){
-fill(40, 154, 218);
+
+  if(frameCount%7==0){
+    this.blueWhite=!this.blueWhite;
+    
+    
+  }
+  if (this.blueWhite==true){
+    fill(40, 154, 218);
+  }
+  else{
+    fill(255);
+  }
+
   noStroke();
   //background blue circle
  
@@ -533,7 +550,14 @@ fill(40, 154, 218);
   translate(this.pos.x,this.pos.y);
    circle(0, 0, 125);
   stroke(255);
-  fill(255);
+   if (this.blueWhite==true){
+     fill(255);
+  }
+  else{
+    fill(40, 154, 218);
+  }
+ 
+
   strokeWeight(2);
   rotate(frameCount / -100.0);
   beginShape();
