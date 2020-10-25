@@ -17,6 +17,15 @@ let squares=[maximumSquares]
 let clock;
 let totalStars=0;
 let totalSquares=0;
+let screen=1;
+let screenClock;
+let fadeOut=100;
+let screenStar;
+let screenStarx=0;
+let screenStary=0;
+let screenSquarex=0;
+let screenSquarey=0;
+let screenSquare;
 
 function setup() {
   maximumSquares=floor(random(20,30));
@@ -31,6 +40,9 @@ function setup() {
  box2 = new Box(2); //right booth
  clock = new Clock(2750); //clock for blue circles
  clock2 = new Clock(2750); //clock for red squares
+screenClock=new Clock (15000); //clock for star on first screen
+  screenStar = new Bouncer(-80,150);
+  screenSquare = new Bouncer(450,150);
 // stars[0] = new Bouncer(415,height+250);
 //  stars[1] = new Bouncer(415,height+250);
  for (let i = 0; i<maximumStars;i++){
@@ -41,11 +53,54 @@ function setup() {
   }
 clock.start(); //start timer
 clock2.start();
+screenClock.start();
 }
 
 
 function draw() {
-//  print("total"+totalStars);
+  
+  if (screen == 1){
+  background(99, 110, 114,80);
+    screen1();
+  }
+  else if (screen==2){
+    screen2();
+    fill(99, 110, 114,fadeOut);
+    rect(width/2,height/2,width+10,height+10);
+    fadeOut=fadeOut-5;
+  }
+  if (screenClock.isFinished()){
+    screen=2;
+  }
+}
+
+function screen1(){
+  push();
+  translate(screenStarx,screenStary);
+    if (screenStarx<475){
+     screenStarx+=1;
+  }
+  if (screenStarx==475){
+    screenStary+=(random(-2,2));
+  }
+ scale(2);
+  screenStar.display();
+  pop();
+  push();
+   translate(screenSquarex,screenSquarey);
+  if(screenSquarex>-470){
+      screenSquarex-=1;
+  }
+  if (screenSquarex==-470){
+     screenSquarey+=(random(-2,2));
+  }
+   scale(2);
+  screenSquare.displaySquare();
+  pop();
+}
+
+function screen2(){
+  //  print("total"+totalStars);
 //  print("max"+maximumStars);
   // star creation is adapted from 
   //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
