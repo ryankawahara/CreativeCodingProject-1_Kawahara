@@ -26,6 +26,9 @@ let screenStary=0;
 let screenSquarex=0;
 let screenSquarey=0;
 let screenSquare;
+ let screenStarxSpeed=1;
+ let screenSquarexSpeed=1;
+ let bounceClock;
 
 function setup() {
   maximumSquares=floor(random(20,30));
@@ -40,7 +43,8 @@ function setup() {
  box2 = new Box(2); //right booth
  clock = new Clock(2750); //clock for blue circles
  clock2 = new Clock(2750); //clock for red squares
-screenClock=new Clock (15000); //clock for star on first screen
+ bounceClock= new Clock(10000);// pause before bounce
+screenClock=new Clock (12000); //clock for first screen sequence
   screenStar = new Bouncer(-80,150);
   screenSquare = new Bouncer(450,150);
 // stars[0] = new Bouncer(415,height+250);
@@ -54,6 +58,7 @@ screenClock=new Clock (15000); //clock for star on first screen
 clock.start(); //start timer
 clock2.start();
 screenClock.start();
+bounceClock.start();
 }
 
 
@@ -77,22 +82,37 @@ function draw() {
 function screen1(){
   push();
   translate(screenStarx,screenStary);
-    if (screenStarx<475){
-     screenStarx+=1;
-  }
-  if (screenStarx==475){
+     screenStarx+=screenStarxSpeed;
+  if (screenStarx>475){
     screenStary+=(random(-2,2));
+ 
+   if (bounceClock.isFinished()==false){
+    	screenStarxSpeed= 0;
+    }
+      else if (bounceClock.isFinished()==true){
+ screenStarxSpeed= -4;
+    }
   }
  scale(2);
   screenStar.display();
   pop();
   push();
    translate(screenSquarex,screenSquarey);
-  if(screenSquarex>-470){
-      screenSquarex-=1;
-  }
-  if (screenSquarex==-470){
+   screenSquarex-=screenSquarexSpeed;
+  if(screenSquarex<-470){
+      
      screenSquarey+=(random(-2,2));
+      if (bounceClock.isFinished()==false){
+    	screenSquarexSpeed= 0;
+    	print("nope");
+    	print(screenSquarex);
+    }
+      else if (bounceClock.isFinished()==true){
+      	    	print("yep");
+
+ screenSquarexSpeed= -4;
+    }
+
   }
    scale(2);
   screenSquare.displaySquare();
