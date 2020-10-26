@@ -540,7 +540,7 @@ display(){ //draws the stars
   vertex(-29, 40);
   vertex(-23, 7);
   vertex(-47, -15);
-  vertex(-14, -20);a
+  vertex(-14, -20);
   endShape(CLOSE);
   pop();
 }
