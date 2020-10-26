@@ -29,8 +29,8 @@ let screenStary=0;
 let screenSquarex=0; //the x and y position for the square on the first screen
 let screenSquarey=0;
 let screenSquare; //creates a square on the first screen
- let screenStarxSpeed=1; //the speed of the two moving objects on the first screen
- let screenSquarexSpeed=1;
+ let screenStarxSpeed=2; //the speed of the two moving objects on the first screen
+ let screenSquarexSpeed=2;
  let bounceClock; //times out how long the two are touching before they bounce apart
 
 function setup() {
@@ -94,7 +94,7 @@ function screen1(){
     	screenStarxSpeed= 0;
     }
       else if (bounceClock.isFinished()==true){//star moves in opposite direction after a few seconds
- screenStarxSpeed= -4;
+ screenStarxSpeed= -6;
     }
   }
  scale(2);
@@ -110,7 +110,7 @@ function screen1(){
     //	print(screenSquarex);
     }
       else if (bounceClock.isFinished()==true){ //square moves in opposite direction after a few seconds
- screenSquarexSpeed= -4;
+ screenSquarexSpeed= -6;
     }
   }
    scale(2);
