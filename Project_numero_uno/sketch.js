@@ -1,39 +1,43 @@
-let redOrWhite;
-let backgroundRed=116;
-let backgroundBlue=255;
-let leftClicker = false;
-let rightClicker = false;
-let maximumStars;
-let maximumSquares=5;
-let ylocStart=750;
-let box1;
-let box2;
-let numberOfStars=1;
-let numberOfSquares=1;
-let move=200;
-allMove=200;
-let stars=[maximumStars];
-let squares=[maximumSquares]
-let clock;
-let totalStars=0;
-let totalSquares=0;
-let screen=1;
-let screenClock;
-let fadeOut=100;
-let screenStar;
-let screenStarx=0;
+//Ryan Kawahara Project 1
+//Oct 26, 2020
+
+//instructions: After the introductory screen, you can interact! Click on one or both of the two ballot boxes.
+//You can also click and drag the stars or squares to move them around the screen.
+
+let redOrWhite; //used to make the stripe squares alternate colors
+let leftClicker = false; //used to make the left box work when clicked
+let rightClicker = false; //used to make the right box work when clicked
+let maximumStars; //used to determine how many stars to create
+let maximumSquares; //used to determine how many squares ot create
+let ylocStart=750; //starts the ballots off screen
+let box1; //left ballot box
+let box2; //right ballot box
+let move=200; //these two variables are used to move the ballot boxes
+let allMove=200;//spaces out the two ballot boxes
+let stars=[maximumStars]; //array of objects to create stars
+let squares=[maximumSquares];// array of objects to create squares
+let clock; //clock for stars
+let clock2; //clock for squares
+let totalStars=0; //keeps track of how many stars there are
+let totalSquares=0; //keeps track of how many squares there are
+let screen=1; //starts on the first screen
+let screenClock; //creates clock for timing on the first screen
+let fadeOut=100; //fades in the next screen
+let screenStar; //creates the star on the first screen
+let screenStarx=0; // the x and y position for the star on the first screen
 let screenStary=0;
-let screenSquarex=0;
+let screenSquarex=0; //the x and y position for the square on the first screen
 let screenSquarey=0;
-let screenSquare;
- let screenStarxSpeed=1;
+let screenSquare; //creates a square on the first screen
+ let screenStarxSpeed=1; //the speed of the two moving objects on the first screen
  let screenSquarexSpeed=1;
- let bounceClock;
+ let bounceClock; //times out how long the two are touching before they bounce apart
 
 function setup() {
-  maximumSquares=floor(random(20,30));
-  maximumStars=floor(random(20,30));
-  stars=[maximumStars];
+  maximumSquares=floor(random(20,30)); //randomly generates how many squares to draw
+  maximumStars=floor(random(20,30)); //randomly generates how many stars to draw
+  stars=[maximumStars];//creates a star array with the randomly generated number of slots
+  squares=[maximumSquares];// array of objects to create squares
   createCanvas(720, 720);
   background(99, 110, 114);
   ellipseMode(CENTER);
@@ -49,21 +53,21 @@ screenClock=new Clock (12000); //clock for first screen sequence
   screenSquare = new Bouncer(450,150);
 // stars[0] = new Bouncer(415,height+250);
 //  stars[1] = new Bouncer(415,height+250);
+//these two loops initialize a bunch of stars and squares
  for (let i = 0; i<maximumStars;i++){
     stars[i] = new Bouncer(385,height);
   } 
   for (let i = 0; i < maximumSquares;i++){
     squares[i]= new Bouncer(470,height);
   }
-clock.start(); //start timer
-clock2.start();
-screenClock.start();
-bounceClock.start();
-}
+clock.start(); //spaces out the stars so they're not all shot at the same time
+clock2.start(); //spaces out the squares so they're not all shot at the same time
+screenClock.start(); //times out how long before changing from the first screen to second screen
+bounceClock.start(); //times out how long the two objects in the start screen are touching before they bounce away
+}//setup
 
 
 function draw() {
-  
   if (screen == 1){
   background(99, 110, 114,80);
     screen1();
@@ -72,12 +76,12 @@ function draw() {
     screen2();
     fill(99, 110, 114,fadeOut);
     rect(width/2,height/2,width+10,height+10);
-    fadeOut=fadeOut-5;
+    fadeOut=fadeOut-5; //makes the screen fade in
   }
   if (screenClock.isFinished()){
     screen=2;
   }
-}
+}//draw
 
 function screen1(){
   push();
@@ -89,7 +93,7 @@ function screen1(){
    if (bounceClock.isFinished()==false){
     	screenStarxSpeed= 0;
     }
-      else if (bounceClock.isFinished()==true){
+      else if (bounceClock.isFinished()==true){//star moves in opposite direction after a few seconds
  screenStarxSpeed= -4;
     }
   }
@@ -100,24 +104,19 @@ function screen1(){
    translate(screenSquarex,screenSquarey);
    screenSquarex-=screenSquarexSpeed;
   if(screenSquarex<-470){
-      
      screenSquarey+=(random(-2,2));
       if (bounceClock.isFinished()==false){
     	screenSquarexSpeed= 0;
-    	print("nope");
-    	print(screenSquarex);
+    //	print(screenSquarex);
     }
-      else if (bounceClock.isFinished()==true){
-      	    	print("yep");
-
+      else if (bounceClock.isFinished()==true){ //square moves in opposite direction after a few seconds
  screenSquarexSpeed= -4;
     }
-
   }
    scale(2);
   screenSquare.displaySquare();
   pop();
-}
+}//screen1
 
 function screen2(){
   //  print("total"+totalStars);
@@ -212,7 +211,7 @@ function screen2(){
         yloc=720;
     }
    */
-}
+}//screen2
 
 function mouseDragged(){
   for (let i = 0; i<totalStars;i++){
@@ -221,7 +220,7 @@ function mouseDragged(){
     for (let i = 0; i<totalSquares;i++){
     squares[i].dragged(mouseX,mouseY);
   }
-}
+}//mouseDragged
 
 function mousePressed(){
 //  print("x"+mouseX+",y"+mouseY);
@@ -259,9 +258,9 @@ if ((box2.bounds()==true)){
   box2.scale=1;
   box2.boxOpening=0;
 }
-}
+}//mousePressed
 
-class Box {
+class Box { //this class is used in creating the ballot boxes and animating the ballots
   constructor(side){
     this.side=side;
     this.distanceX=0;
@@ -274,7 +273,7 @@ class Box {
     this.letterSpeed=1;
   }
 
-speed(){
+speed(){ //moves the ballots into the ballot box
   fill(0);
 if ((leftClicker == true)&&(this.side==1)){
     if (totalStars==maximumStars){
@@ -286,7 +285,7 @@ if ((leftClicker == true)&&(this.side==1)){
         // rect(0,this.yloc-650,25,25);
         push();
         scale(this.scale);
-        translate(0,this.yloc-650,25,25);
+        translate(0,this.yloc-650);
        // rect(0,0,25,25);
         this.envelope(1);
         pop();
@@ -315,7 +314,7 @@ if ((leftClicker == true)&&(this.side==1)){
      //   println("hello");
       push();
        scale(this.scale);
-        translate(0,this.yloc-650,25,25);
+        translate(0,this.yloc-650);
        // rect(0,0,25,25);
         this.envelope(2);
         pop();
@@ -326,7 +325,7 @@ if ((leftClicker == true)&&(this.side==1)){
        rect(0,-25,50,30);
        this.boxOpening+=1.55;
         if (totalSquares>=maximumSquares){
-       translate(0,this.yloc-650,25,25);
+       translate(0,this.yloc-650);
       this.letterSpeed=0;
       this.scale=1;
       this.yloc=-1000;
@@ -334,7 +333,8 @@ if ((leftClicker == true)&&(this.side==1)){
   }
 }
 
-launch(){
+launch(){ //this function moves the ballots and also animates the light.
+	//also draws the ballot boxes
   this.bounds();
   stroke(0); 
   fill(255);
@@ -345,9 +345,9 @@ launch(){
     ellipse(0,-55,20,20);
     this.light();
     this.speed();
-}
+}//launch
 
-light(){
+light(){ //makes the light on the ballot box fade in and out
   if ((leftClicker == true)&&(this.side==1)){
   fill(76, 209, 55,this.opacity);
   //print(opacity);
@@ -379,9 +379,9 @@ light(){
     ellipse(0,-55,20,20);
   }
   */
-}
+}//light
 
-bounds(){
+bounds(){//determines whether the ballot box has been clicked or not
 if (mouseIsPressed==true){
 	if ((this.distanceX<42.5)&&(this.distanceY<150))
 	{
@@ -393,9 +393,9 @@ if (mouseIsPressed==true){
   	return false;
 		}
 	}
-}
+}//bounds
 
-envelope(whichSide){
+envelope(whichSide){//creates the ballots that go into the ballot boxes
 /*fill(255);
 rect(0,0,25,45);
 strokeWeight(0.5);
@@ -447,7 +447,7 @@ scale(0.75);
   pop();
 }
 
-else if (whichSide==2){
+else if (whichSide==2){ //right side has red box instead of blue box
 push();
 scale(0.75);
  push();
@@ -492,7 +492,7 @@ fill(195,0,25);
 }
 }
 
-class Bouncer {
+class Bouncer { //this class is used to create the bouncing stars and squares
   constructor(x,y){
 this.pos = createVector(x,y);
 this.vel = createVector(0,-3);
@@ -501,7 +501,7 @@ this.redWhite=true;
     this.blueWhite=true;
 }
 
-display(){
+display(){ //draws the stars
   if(frameCount%7==0){
     this.blueWhite=!this.blueWhite;
   }
@@ -540,18 +540,12 @@ display(){
   vertex(-29, 40);
   vertex(-23, 7);
   vertex(-47, -15);
-  vertex(-14, -20);
+  vertex(-14, -20);a
   endShape(CLOSE);
   pop();
 }
-/*intersects(other){
-  let howFar;
-  howFar= dist(this.pos.x,this.pos.y,other.pos.x,other.pos.y);
-  return (howFar < 126 );
-}
-*/
 
-displaySquare(){
+displaySquare(){ //draws the striped squares
   if (frameCount%7==0){
     this.redWhite=!this.redWhite
   }
@@ -561,7 +555,7 @@ displaySquare(){
    rotate(frameCount / 100.0);
    noStroke();
   //fill(255,0,0);
-   if (this.redWhite==true){
+   if (this.redWhite==true){ //this code makes it so that the colors alternate
      // println("white");
       redOrWhite=color(255);
     //  println("yep");
@@ -620,7 +614,7 @@ if ((this.pos.y>720)||(this.pos.y<0)){
 }
 }
 */
-launcher(){
+launcher(){ //launches the stars
   if (leftClicker == true){
 push();
       translate(-allMove,0)
@@ -631,7 +625,9 @@ push();
 }
 }
 
-dragged(px,py){
+dragged(px,py){ 
+	//my favorite function! This one lets you drag and collect stars and squares
+	//and move them around
   let distance = dist(px,py,this.pos.x,this.pos.y);
   if (distance<63){
     this.pos.x=px;
@@ -639,7 +635,7 @@ dragged(px,py){
   }
 }
 
-squareLauncher(){
+squareLauncher(){ //lauches the squares
   if (rightClicker == true){
 push();
     translate(-allMove,0)
@@ -652,7 +648,7 @@ push();
 }
 }
 
-class Clock{ //adapted from Shiffman 
+class Clock{ //adapted from Shiffman. Used to time things out
 //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
   constructor(tempTotalTime){
   this.savedTime; //When clock is started
