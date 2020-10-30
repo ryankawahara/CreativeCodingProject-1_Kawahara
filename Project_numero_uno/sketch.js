@@ -32,7 +32,7 @@ let screenSquare; //creates a square on the first screen
  let screenStarxSpeed=2; //the speed of the two moving objects on the first screen
  let screenSquarexSpeed=2;
  let bounceClock; //times out how long the two are touching before they bounce apart
-  let fillOpacity=25;
+  let fillOpacity=25; //these variables and the ones below manipulate the bars that appear on the government building
   let rightFillOpacity=25;
   let middleFillOpacity=25;
 let leftGrow=0;
@@ -140,9 +140,8 @@ function screen2(){
   // star creation is adapted from 
   //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
  //print(totalSquares);
-  
 
-
+//background changes color depending on whether there or more squares than stars or vice versa
   if ((totalStars==0)&&(totalSquares==0)){
       background(99, 110, 114,80);
   }
@@ -176,14 +175,14 @@ function screen2(){
 
  
   if ((totalStars>=maximumStars)&&(squaresDone==false)&&(leftGrowFill==-210)){
-      fill(116, 185, 255,fillOpacity);
+      fill(116, 185, 255,fillOpacity); //fill blue if maximum stars are created
     fillOpacity+=10;
   buildingBackground();
   whichColor=1;
   }
   	if (((totalStars>=maximumStars))&&(totalSquares>=maximumSquares)){
-		
-
+		//below if statements cause the building to remain the color that it became first,
+		//even if the number of stars and squares is the same
 		if (whichColor==1){
 			  fill(116, 185, 255);
 			  buildingBackground();
@@ -194,21 +193,18 @@ function screen2(){
 		}
   }
   else if (totalSquares>=maximumSquares&&(starsDone==false)&&(rightGrowFill==-210)){
-  	fill(214, 48, 49,rightFillOpacity);
+  	fill(214, 48, 49,rightFillOpacity); //fill red if maximum squares are created
     rightFillOpacity+=10;
   buildingBackground();
   whichColor=2;
   }
-
-
-
 rectMode(CENTER);
   if (clock.isFinished()){
     if ((totalStars < stars.length)&&(leftClicker==true)){
       stars[totalStars]= new Bouncer(270,height);
       totalStars+=1;
       if (leftAddClock.isFinished()){
-         leftGrow-=210/maximumStars;
+         leftGrow-=210/maximumStars; //increase transparent blue bar
         leftAddClock.start();
     
       }
@@ -220,7 +216,7 @@ rectMode(CENTER);
       squares[totalSquares]= new Bouncer(470,height);
       totalSquares+=1;
        if (rightAddClock.isFinished()){
-         rightGrow-=210/maximumSquares;
+         rightGrow-=210/maximumSquares; //increase transparent red bar
         rightAddClock.start();
         
       }
@@ -290,7 +286,7 @@ rectMode(CENTER);
    */
 }//screen2
 
-function buildingBackground(){
+function buildingBackground(){ //draws a building in a style typical to most goverment buildings
   rectMode(CORNER);
  //fill(247, 241, 227);
   push();
