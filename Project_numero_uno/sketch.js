@@ -32,10 +32,22 @@ let screenSquare; //creates a square on the first screen
  let screenStarxSpeed=2; //the speed of the two moving objects on the first screen
  let screenSquarexSpeed=2;
  let bounceClock; //times out how long the two are touching before they bounce apart
+  let fillOpacity=25;
+  let rightFillOpacity=25;
+  let middleFillOpacity=25;
+let leftGrow=0;
+let leftGrowFill=0;
+let leftAddClock;
+let rightGrow=0;
+let rightGrowFill=0;
+let rightAddClock;
+let starsDone =false;
+let squaresDone=false;
+let whichColor;
 
 function setup() {
-  maximumSquares=floor(random(20,30)); //randomly generates how many squares to draw
-  maximumStars=floor(random(20,30)); //randomly generates how many stars to draw
+  maximumSquares=floor(random(10,20)); //randomly generates how many squares to draw
+  maximumStars=floor(random(10,20)); //randomly generates how many stars to draw
   stars=[maximumStars];//creates a star array with the randomly generated number of slots
   squares=[maximumSquares];// array of objects to create squares
   createCanvas(720, 720);
@@ -48,6 +60,8 @@ function setup() {
  clock = new Clock(2750); //clock for blue circles
  clock2 = new Clock(2750); //clock for red squares
  bounceClock= new Clock(10000);// pause before bounce
+  leftAddClock= new Clock(2740);
+  rightAddClock= new Clock(2740);
 screenClock=new Clock (12000); //clock for first screen sequence
   screenStar = new Bouncer(-80,150);
   screenSquare = new Bouncer(450,150);
@@ -64,6 +78,8 @@ clock.start(); //spaces out the stars so they're not all shot at the same time
 clock2.start(); //spaces out the squares so they're not all shot at the same time
 screenClock.start(); //times out how long before changing from the first screen to second screen
 bounceClock.start(); //times out how long the two objects in the start screen are touching before they bounce away
+    leftAddClock.start();
+    rightAddClock.start();
 }//setup
 
 
@@ -124,22 +140,78 @@ function screen2(){
   // star creation is adapted from 
   //http://learningprocessing.com/exercises/chp10/exercise-10-04-improved-rain-game
  //print(totalSquares);
+  
+
+
   if ((totalStars==0)&&(totalSquares==0)){
       background(99, 110, 114,80);
   }
    else if (totalStars>totalSquares){
      background(116, 185, 255,80);
+    
   }
   else if (totalSquares>totalStars){
       background(214, 48, 49,80);
+      
   }
   else if (totalSquares==totalStars){
     background(108, 92, 231,80);
   }
+  stroke(0);
+  fill(247, 241, 227);
+   buildingBackground();
+   noStroke();
+   if (totalStars<maximumStars){
+   	starsDone=false;
+   }
+   else if (totalStars>=maximumStars){
+   	starsDone=true;
+   }
+    if (totalSquares<maximumSquares){
+   	squaresDone=false;
+   }
+   else if (totalSquares>=maximumSquares){
+   	squaresDone=true;
+   }
+
+ 
+  if ((totalStars>=maximumStars)&&(squaresDone==false)&&(leftGrowFill==-210)){
+      fill(116, 185, 255,fillOpacity);
+    fillOpacity+=10;
+  buildingBackground();
+  whichColor=1;
+  }
+  	if (((totalStars>=maximumStars))&&(totalSquares>=maximumSquares)){
+		
+
+		if (whichColor==1){
+			  fill(116, 185, 255);
+			  buildingBackground();
+		}
+		else if (whichColor==2){
+			fill(214, 48, 49);
+			  buildingBackground();
+		}
+  }
+  else if (totalSquares>=maximumSquares&&(starsDone==false)&&(rightGrowFill==-210)){
+  	fill(214, 48, 49,rightFillOpacity);
+    rightFillOpacity+=10;
+  buildingBackground();
+  whichColor=2;
+  }
+
+
+
+rectMode(CENTER);
   if (clock.isFinished()){
     if ((totalStars < stars.length)&&(leftClicker==true)){
       stars[totalStars]= new Bouncer(270,height);
       totalStars+=1;
+      if (leftAddClock.isFinished()){
+         leftGrow-=210/maximumStars;
+        leftAddClock.start();
+    
+      }
     }
     clock.start();
   }
@@ -147,6 +219,11 @@ function screen2(){
     if ((totalSquares < squares.length)&&(rightClicker==true)){
       squares[totalSquares]= new Bouncer(470,height);
       totalSquares+=1;
+       if (rightAddClock.isFinished()){
+         rightGrow-=210/maximumSquares;
+        rightAddClock.start();
+        
+      }
     }
     clock2.start();
   }
@@ -212,6 +289,56 @@ function screen2(){
     }
    */
 }//screen2
+
+function buildingBackground(){
+  rectMode(CORNER);
+ //fill(247, 241, 227);
+  push();
+  translate(width/2,height/2);
+  scale(0.75);
+
+    rect(-30,90,60,-210); // center pillars
+    push();
+  translate(-25,0)
+    rect(400/3,90,60,-210);
+  pop();
+    push();
+  translate(25,0)
+    rect(-400/3-65,90,60,-210);
+
+  noStroke();
+
+  if (leftGrowFill>leftGrow){
+ 
+  leftGrowFill-=1;
+  }
+  	  fill(116, 185, 255,95);
+     rect(-400/3-65,90,60,leftGrowFill); //fill bar
+
+  if (rightGrowFill>rightGrow){
+  	rightGrowFill-=1;
+
+
+  }
+    	fill(214, 48, 49,95);
+   rect(400/3-50,90,60,rightGrowFill);
+  pop();
+    
+  
+    rect(-400/3-65,90,400,40); //basebottom
+
+    push();
+  translate(0,-10);
+  triangle(-400/3-67,-150,400/3+67,-150,-0,-250);
+
+  pop();
+      rect(-400/3-67,-160,400,40); //basetop
+
+
+  
+  pop();
+  strokeWeight(1);
+}
 
 function mouseDragged(){
   for (let i = 0; i<totalStars;i++){
