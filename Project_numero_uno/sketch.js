@@ -1,5 +1,5 @@
-//Ryan Kawahara Project 1
-//Oct 26, 2020
+//Ryan Kawahara Project 1 (revised)
+//Oct 30, 2020
 
 //instructions: After the introductory screen, you can interact! Click on one or both of the two ballot boxes.
 //You can also click and drag the stars or squares to move them around the screen.
